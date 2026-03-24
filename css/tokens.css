@@ -1,0 +1,49 @@
+:root {
+  --bg: #f5f2e8;
+  --bg-deep: #f0e7d4;
+  --card: rgba(255, 252, 246, 0.9);
+  --card-solid: #fffaf2;
+  --text: #243127;
+  --muted: #5f6f63;
+  --border: rgba(103, 125, 105, 0.22);
+  --accent: #2f6c4f;
+  --accent-dark: #214e39;
+  --accent-soft: #deeadf;
+  --green: #3a7f4c;
+  --error: #a7372d;
+  --shadow: 0 24px 60px rgba(67, 78, 61, 0.16);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(255, 255, 255, 0.85), transparent 34%),
+    linear-gradient(180deg, #f9f5ea 0%, var(--bg) 52%, var(--bg-deep) 100%);
+  color: var(--text);
+  line-height: 1.45;
+  overflow-x: hidden;
+  position: relative;
+}
+
+h1 {
+  margin: 0 0 12px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.2rem, 3vw, 3.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+
+p {
+  margin: 0 0 12px;
+  font-size: 1.02rem;
+}
+
+.hidden {
+  display: none;
+}

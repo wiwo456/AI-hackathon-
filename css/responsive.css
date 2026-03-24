@@ -1,0 +1,140 @@
+@media (max-width: 860px) {
+  .card::after {
+    right: 12px;
+    bottom: 8px;
+    font-size: 2.6rem;
+  }
+
+  .login-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .login-copy {
+    padding-right: 0;
+  }
+
+  .login-copy::after {
+    right: 14px;
+    bottom: 8px;
+    font-size: 3.6rem;
+  }
+
+  .county-hero,
+  .county-metric-grid,
+  .county-bottom-grid,
+  .county-system-grid,
+  .caseworker-system-grid,
+  .assign-row,
+  .admin-ai-form {
+    grid-template-columns: 1fr;
+  }
+
+  .county-hero {
+    display: grid;
+  }
+
+  .client-request-meta,
+  .county-section-head,
+  .client-request-head,
+  .worker-load-card,
+  .worker-client-head,
+  .worker-detail-header,
+  .worker-detail-actions,
+  .housing-opportunity-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .worker-load-meta {
+    align-items: flex-start;
+  }
+
+  .worker-client-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-wrap::before {
+    opacity: 0.8;
+  }
+
+  .app-wrap {
+    width: min(100% - 20px, 1120px);
+    padding-top: 18px;
+  }
+
+  .top-actions-row {
+    justify-content: flex-end;
+  }
+
+  .card {
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  #login-screen {
+    min-height: calc(100vh - 56px);
+  }
+
+  .login-panel {
+    padding: 18px;
+  }
+
+  .login-footer,
+  .double-select {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .login-footer {
+    justify-content: stretch;
+  }
+
+  .forgot-btn {
+    justify-self: end;
+  }
+
+  .house {
+    opacity: 0.45;
+  }
+
+  .help-side-btn {
+    top: auto;
+    bottom: 16px;
+    transform: none;
+  }
+
+  .help-side-btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .help-chat-panel {
+    top: auto;
+    right: 12px;
+    bottom: 76px;
+    transform: none;
+    width: calc(100vw - 24px);
+    height: min(460px, calc(100vh - 120px));
+  }
+
+  .county-metric-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .app-wrap.county-expanded {
+    width: min(100% - 20px, 1380px);
+  }
+
+  .app-wrap.caseworker-expanded {
+    width: min(100% - 20px, 1380px);
+  }
+
+  #admin-dashboard-screen.county-mode {
+    padding: 18px;
+  }
+
+  #admin-dashboard-screen.caseworker-mode {
+    padding: 18px;
+  }
+}

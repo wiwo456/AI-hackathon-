@@ -1,0 +1,13 @@
+{
+  "name": "passaic-county-housing-portal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Passaic County Housing Coordination System prototype",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

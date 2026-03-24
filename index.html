@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ID Help</title>
+    <link rel="stylesheet" href="css/tokens.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+  </head>
+  <body>
+    <div class="skyline" id="skyline" aria-hidden="true">
+      <span class="house house-a"></span>
+      <span class="house house-b"></span>
+      <span class="house house-c"></span>
+      <span class="house house-d"></span>
+      <span class="house house-e"></span>
+      <span class="house house-f"></span>
+      <span class="house house-g"></span>
+      <span class="house house-h"></span>
+      <span class="house house-i"></span>
+      <span class="house house-j"></span>
+      <span class="house house-k"></span>
+      <span class="house house-l"></span>
+    </div>
+
+    <main class="app-wrap">
+      <div class="top-row">
+        <div class="top-actions-row">
+          <button class="admin-link-btn" type="button" id="admin-portal-btn">Admin Portal</button>
+        </div>
+      </div>
+
+      <section class="card" id="login-screen">
+        <div class="login-shell">
+          <div class="login-copy">
+            <p class="eyebrow" id="login-eyebrow">Housing support access</p>
+            <h1 id="login-title">Log in to your housing portal</h1>
+            <p class="small-text login-intro" id="login-subtitle">
+              Choose the easiest sign-in method to continue your case support.
+            </p>
+          </div>
+
+          <div class="login-panel">
+            <div id="user-login-panel">
+              <div class="choice-row" id="login-option-row">
+                <button class="choice-btn active" type="button" id="phone-option-btn">Phone Login</button>
+                <button class="choice-btn" type="button" id="worker-option-btn">Case Worker Login</button>
+              </div>
+
+              <form id="phone-login-form" novalidate>
+                <label for="phone-input" id="phone-label">Enter your phone number</label>
+                <input id="phone-input" type="tel" inputmode="tel" autocomplete="tel" placeholder="(000) 000-0000" />
+                <p class="demo-note" id="phone-demo-note">Demo phone:</p>
+
+                <button class="big-btn" type="button" id="send-code-btn">Send Code</button>
+
+                <div class="hidden" id="code-entry-block">
+                  <label for="code-input" id="code-label">Enter code</label>
+                  <input id="code-input" type="text" inputmode="numeric" maxlength="4" placeholder="1234" />
+                  <p class="demo-note" id="code-demo-note">Demo code:</p>
+                  <button class="big-btn" type="button" id="verify-code-btn">Verify Code</button>
+                </div>
+              </form>
+
+              <form id="worker-login-form" class="hidden" novalidate>
+                <label for="worker-username-input" id="worker-username-label">Username</label>
+                <input id="worker-username-input" type="text" autocomplete="username" placeholder="user123" />
+                <p class="demo-note" id="worker-demo-note">Demo username:</p>
+
+                <label for="worker-password-input" id="worker-password-label">Password</label>
+                <input id="worker-password-input" type="password" autocomplete="current-password" placeholder="1234" />
+                <p class="demo-note" id="worker-password-demo-note">Demo password:</p>
+
+                <button class="big-btn" type="submit" id="worker-login-btn">Login</button>
+              </form>
+            </div>
+
+            <div class="hidden" id="admin-login-panel">
+              <button class="back-link-btn" type="button" id="admin-login-back-btn">Back to login</button>
+              <p class="admin-google-mark" id="admin-google-mark">Admin Login</p>
+
+              <div class="choice-row" id="admin-role-row">
+                <button class="choice-btn active" type="button" id="caseworker-role-btn">Case Worker</button>
+                <button class="choice-btn" type="button" id="passaic-role-btn">Passaic County</button>
+              </div>
+
+              <form id="admin-login-form" novalidate>
+                <label for="admin-email-input" id="admin-email-label">Gmail</label>
+                <input id="admin-email-input" type="email" autocomplete="email" placeholder="admin@gmail.com" />
+                <p class="demo-note" id="admin-demo-note">Admin demo:</p>
+
+                <label for="admin-password-input" id="admin-password-label">Password</label>
+                <input id="admin-password-input" type="password" autocomplete="current-password" placeholder="Enter password" />
+                <p class="demo-note" id="admin-password-demo-note">Demo password:</p>
+
+                <button class="big-btn" type="submit" id="admin-login-btn">Login with Gmail</button>
+              </form>
+            </div>
+
+            <p class="error-text" id="login-error" aria-live="polite"></p>
+
+            <div class="language-row login-language-row">
+              <button class="lang-btn active" type="button" data-lang="en">English</button>
+              <button class="lang-btn" type="button" data-lang="es">Español</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card hidden" id="admin-dashboard-screen">
+        <div class="screen-top-row">
+          <button class="back-link-btn screen-back-btn" type="button" id="admin-dashboard-back-btn">Go Back</button>
+        </div>
+
+        <div class="dashboard-head">
+          <div>
+            <p class="eyebrow" id="admin-dashboard-eyebrow">Staff cases</p>
+            <h1 id="admin-dashboard-title">Your case dashboard</h1>
+            <p class="small-text" id="admin-dashboard-subtitle">See the people and cases you are handling today.</p>
+          </div>
+        </div>
+
+        <div class="admin-summary-card">
+          <strong id="admin-role-title">Case Worker</strong>
+          <span class="small-text" id="admin-role-subtitle">Assigned cases</span>
+        </div>
+
+        <div id="admin-case-view">
+          <div class="caseworker-system-grid">
+            <div class="caseworker-left-column">
+              <div class="caseworker-panel">
+                <div class="county-section-head">
+                  <div>
+                    <strong>📥 Pending Requests</strong>
+                    <p class="small-text">Review newly assigned cases waiting for your approval.</p>
+                  </div>
+                  <span class="county-count-pill" id="worker-pending-count">0 pending</span>
+                </div>
+                <div class="worker-client-list" id="worker-pending-list"></div>
+              </div>
+
+              <div class="caseworker-panel">
+                <div class="county-section-head">
+                  <div>
+                    <strong>🗂️ My Clients</strong>
+                    <p class="small-text">Active clients you are currently helping.</p>
+                  </div>
+                  <span class="county-count-pill worker-active-pill" id="worker-active-count">0 active</span>
+                </div>
+                <div class="worker-client-list" id="worker-active-list"></div>
+              </div>
+            </div>
+
+            <aside class="caseworker-right-column">
+              <div class="caseworker-panel client-detail-panel" id="worker-detail-panel">
+                <div class="county-section-head">
+                  <div>
+                    <strong>📋 Client Details</strong>
+                    <p class="small-text">Select a client to review documents, transportation, notes, and housing options.</p>
+                  </div>
+                </div>
+                <div id="worker-client-detail"></div>
+              </div>
+
+              <div class="caseworker-panel housing-panel">
+                <div class="county-section-head">
+                  <div>
+                    <strong>🏠 Housing Opportunities</strong>
+                    <p class="small-text">Current units and clients ready for housing placement.</p>
+                  </div>
+                  <span class="county-count-pill housing-pill" id="eligible-clients-count">0 eligible</span>
+                </div>
+                <div class="housing-opportunity-list" id="housing-opportunity-list"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <div class="hidden" id="admin-county-view">
+          <div class="county-hero">
+            <div>
+              <p class="eyebrow county-eyebrow">Passaic County Housing Coordination</p>
+              <h2 class="county-title">Manage requests, assignments, and system performance</h2>
+              <p class="small-text county-subtitle">
+                Review incoming client requests, assign the best worker, and monitor county-wide activity.
+              </p>
+            </div>
+            <button class="secondary-btn county-refresh-btn" type="button" id="county-refresh-btn">Refresh Data</button>
+          </div>
+
+          <div class="county-metric-grid">
+            <div class="metric-card metric-blue">
+              <strong id="county-users-number">0</strong>
+              <span class="small-text" id="county-users-label">Active Users (This Week)</span>
+            </div>
+            <div class="metric-card metric-green">
+              <strong id="county-housed-number">0</strong>
+              <span class="small-text" id="county-housed-label">People housed</span>
+            </div>
+            <div class="metric-card metric-orange">
+              <strong id="county-apps-number">0</strong>
+              <span class="small-text" id="county-apps-label">Active applications</span>
+            </div>
+            <div class="metric-card metric-purple">
+              <strong id="county-recommended-worker">-</strong>
+              <span class="small-text">Best Worker Match</span>
+            </div>
+          </div>
+
+          <div class="county-system-grid">
+            <div class="county-left-column">
+              <div class="county-panel county-clients-panel">
+                <div class="county-section-head">
+                  <div>
+                    <strong>🏠 Client Requests</strong>
+                    <p class="small-text">Assign clients to the lowest-workload case worker or choose a different worker.</p>
+                  </div>
+                  <span class="county-count-pill" id="county-client-count">0 open</span>
+                </div>
+                <div class="client-request-list" id="client-request-list"></div>
+              </div>
+
+              <div class="county-bottom-grid">
+                <div class="county-panel insight-summary-panel">
+                  <strong>⚠️ Bottlenecks</strong>
+                  <ul class="insight-list">
+                    <li>52% stuck at State ID</li>
+                    <li>28% stuck at SSN</li>
+                    <li>20% stuck at Birth Certificate</li>
+                  </ul>
+                </div>
+
+                <div class="county-panel transport-summary-panel">
+                  <strong>🚗 Transport Impact</strong>
+                  <p class="info-big-number">37%</p>
+                  <p class="small-text">of users need transportation support and are more likely to miss appointments.</p>
+                </div>
+              </div>
+            </div>
+
+            <aside class="county-right-column">
+              <div class="county-panel county-workers-panel">
+                <div class="county-section-head">
+                  <div>
+                    <strong>👥 Case Workers</strong>
+                    <p class="small-text">Track workload and see the recommended worker for the next assignment.</p>
+                  </div>
+                </div>
+                <div class="worker-load-list" id="worker-load-list"></div>
+              </div>
+
+              <div class="county-panel admin-ai-panel">
+                <strong>🤖 AI Insight Assistant</strong>
+                <div class="admin-ai-response" id="ai-response">
+                  Most delays are happening at the State ID step due to appointments and transportation issues.
+                </div>
+                <label class="admin-ai-label" for="ai-input">Ask about system</label>
+                <div class="admin-ai-form">
+                  <input id="ai-input" type="text" placeholder="Ask about system..." />
+                  <button class="secondary-btn admin-ai-btn" type="button" id="ai-ask-btn">Ask</button>
+                </div>
+                <p class="small-text admin-ai-note">
+                  This assistant currently uses simple logic. It can be upgraded to a real AI
+                  (like ChatGPT) to provide deeper insights if the system is approved.
+                </p>
+              </div>
+
+              <div class="county-panel county-notifications-panel">
+                <div class="county-section-head">
+                  <div>
+                    <strong>🔔 Notifications</strong>
+                    <p class="small-text">Recent assignment and system activity.</p>
+                  </div>
+                </div>
+                <div class="notification-list" id="county-notification-list"></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="card hidden" id="dashboard-screen">
+        <div class="screen-top-row">
+          <button class="back-link-btn screen-back-btn" type="button" id="dashboard-back-btn">Go Back</button>
+        </div>
+
+        <div class="dashboard-head">
+          <div>
+            <p class="eyebrow" id="dashboard-eyebrow">Your documents</p>
+            <h1 id="dashboard-title">Choose what you need</h1>
+            <p class="small-text" id="dashboard-subtitle">Tap a box to see the document you want help with.</p>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <button class="doc-card" type="button" data-doc="id">
+            <span class="doc-art id-art" aria-hidden="true"></span>
+            <strong id="doc-id-title">Your ID</strong>
+            <span class="small-text" id="doc-id-text">State ID help</span>
+          </button>
+
+          <button class="doc-card" type="button" data-doc="birth">
+            <span class="doc-art birth-art" aria-hidden="true"></span>
+            <strong id="doc-birth-title">Birth Certificate</strong>
+            <span class="small-text" id="doc-birth-text">Birth record help</span>
+          </button>
+
+          <button class="doc-card" type="button" data-doc="passport">
+            <span class="doc-art passport-art" aria-hidden="true"></span>
+            <strong id="doc-passport-title">Passport</strong>
+            <span class="small-text" id="doc-passport-text">Passport support</span>
+          </button>
+
+          <button class="doc-card" type="button" data-doc="ssn">
+            <span class="doc-art ssn-art" aria-hidden="true"></span>
+            <strong id="doc-ssn-title">SSN</strong>
+            <span class="small-text" id="doc-ssn-text">Social Security help</span>
+          </button>
+        </div>
+
+        <p class="small-text dashboard-note" id="dashboard-note">You can also continue to answer a few questions for a full plan.</p>
+        <button class="big-btn" type="button" id="dashboard-continue-btn">Continue</button>
+      </section>
+
+      <section class="card hidden" id="questions-screen">
+        <div class="screen-top-row">
+          <button class="back-link-btn screen-back-btn" type="button" id="questions-back-btn">Go Back</button>
+        </div>
+
+        <h1 id="main-title">Get your ID plan</h1>
+        <p class="small-text" id="main-subtitle">Answer each question.</p>
+
+        <div class="question-block first-block">
+          <p id="q-birth">Do you have a birth certificate?</p>
+          <div class="choice-row" data-group="hasBirth">
+            <button class="choice-btn" type="button" data-value="true" id="birth-yes">Yes</button>
+            <button class="choice-btn" type="button" data-value="false" id="birth-no">No</button>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p id="q-ssn">Do you have a Social Security card?</p>
+          <div class="choice-row" data-group="hasSSN">
+            <button class="choice-btn" type="button" data-value="true" id="ssn-yes">Yes</button>
+            <button class="choice-btn" type="button" data-value="false" id="ssn-no">No</button>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p id="q-id">Do you have a State ID?</p>
+          <div class="choice-row" data-group="hasID">
+            <button class="choice-btn" type="button" data-value="true" id="id-yes">Yes</button>
+            <button class="choice-btn" type="button" data-value="false" id="id-no">No</button>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p id="q-born">Where were you born?</p>
+          <div class="double-select">
+            <select id="birth-state"></select>
+            <select id="birth-city"></select>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <p id="q-now">Current city (Passaic County)</p>
+          <select id="current-city"></select>
+        </div>
+
+        <p class="error-text" id="plan-error-box" aria-live="polite"></p>
+        <button class="big-btn" type="button" id="plan-btn">Get My Plan</button>
+      </section>
+
+      <section class="card hidden" id="result-screen">
+        <div class="screen-top-row">
+          <button class="back-link-btn screen-back-btn" type="button" id="result-back-btn">Go Back</button>
+        </div>
+
+        <h1 id="result-page-title">Your plan</h1>
+        <ul id="plan-steps"></ul>
+        <button class="big-btn hidden" type="button" id="transport-btn">Get Transportation Help</button>
+        <button class="secondary-btn" type="button" id="start-over-btn">Start over</button>
+      </section>
+    </main>
+
+    <button class="help-side-btn hidden" id="help-float-btn" type="button" hidden>Need Help?</button>
+
+    <aside class="help-chat-panel hidden" id="help-chat-panel" aria-live="polite" hidden>
+      <div class="chat-head">
+        <h2 id="chat-title">Need Help?</h2>
+        <button class="chat-close-btn" id="chat-close-btn" type="button">X</button>
+      </div>
+      <div class="chat-body" id="chat-body"></div>
+      <div class="chat-input-row">
+        <input id="chat-input" type="text" placeholder="Ask a basic question" />
+        <button id="chat-send-btn" type="button">Send</button>
+      </div>
+    </aside>
+
+    <script src="script.js"></script>
+  </body>
+</html>
