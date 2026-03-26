@@ -1199,6 +1199,7 @@ function renderClientLoginPage({ reason = "manual" } = {}) {
 }
 
 function renderClientCreateAccountPage({ reason = "manual" } = {}) {
+  state.authView = "user";
   state.clientNavigation.currentView = "createAccount";
   openScreen("create-account-screen");
 }
@@ -2546,7 +2547,7 @@ function renderClientDocumentsView() {
   `;
 
   document.getElementById("client-documents-back-btn").addEventListener("click", () => {
-    openScreen("dashboard-screen");
+    navigateTo("dashboard", { reason: "client_documents_back" });
   });
 
   container.querySelectorAll("[data-document-card]").forEach((button) => {
@@ -3774,12 +3775,12 @@ function bindEvents() {
   });
 
   document.getElementById("create-account-toggle-btn").addEventListener("click", () => {
-    openScreen("create-account-screen");
+    navigateTo("createAccount", { reason: "open_create_account" });
     document.getElementById("create-account-name-input").focus();
   });
 
   document.getElementById("create-account-back-btn").addEventListener("click", () => {
-    openScreen("login-screen");
+    navigateTo("login", { reason: "create_account_back" });
   });
 
   document.getElementById("create-account-phone-mode-btn").addEventListener("click", () => {
@@ -3961,7 +3962,7 @@ function bindEvents() {
   });
 
   document.getElementById("dashboard-continue-btn").addEventListener("click", () => {
-    showQuestionScreen({ prefillFromSaved: true });
+    navigateTo("intake", { reason: "dashboard_continue", prefillFromSaved: true });
   });
 
   document.getElementById("dashboard-back-btn").addEventListener("click", () => {
@@ -3974,11 +3975,11 @@ function bindEvents() {
 
   document.getElementById("questions-back-btn").addEventListener("click", () => {
     if (state.clientPortalData.currentUser?.hasCompletedIntake) {
-      openScreen("dashboard-screen");
+      navigateTo("dashboard", { reason: "questions_back_completed" });
       return;
     }
 
-    openScreen("questions-screen");
+    navigateTo("intake", { reason: "questions_back_incomplete", prefillFromSaved: false });
   });
 
   document.getElementById("questions-logout-btn").addEventListener("click", () => {
@@ -4018,11 +4019,12 @@ function bindEvents() {
   });
 
   document.getElementById("result-back-btn").addEventListener("click", () => {
-    openScreen("questions-screen");
+    navigateTo("intake", { reason: "plan_back", prefillFromSaved: true });
   });
 
   document.getElementById("plan-dashboard-btn").addEventListener("click", () => {
-    showApp();
+    console.log("[router] Go to My Dashboard click");
+    navigateTo("dashboard", { reason: "plan_to_dashboard" });
   });
 
   document.getElementById("current-same-as-birth-input").addEventListener("change", (event) => {
