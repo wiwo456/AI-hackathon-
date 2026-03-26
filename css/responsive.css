@@ -109,8 +109,7 @@
   }
 
   .login-footer,
-  .double-select,
-  .triple-select {
+  .double-select {
     display: grid;
     grid-template-columns: 1fr;
   }

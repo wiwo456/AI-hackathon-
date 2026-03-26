@@ -2,10 +2,12 @@ const state = {
   lang: "en",
   authView: "user",
   loginView: "phone",
-  createAccountMode: "phone",
   adminRole: "caseworker",
   otpSent: false,
-  pendingPhoneNumber: "",
+  demoPhone: "",
+  demoUsername: "",
+  demoCode: "",
+  demoAdminEmail: "idhelp.admin.portal@gmail.com",
   countyData: {
     clients: [],
     workers: [],
@@ -19,8 +21,7 @@ const state = {
     selectedWorkerId: null
   },
   clientPortalData: {
-    currentClientId: null,
-    currentUser: null,
+    currentClientId: "CL-1006",
     pendingImage: null,
     documents: [],
     selectedDocumentType: null,
@@ -54,12 +55,31 @@ const state = {
     hasSSN: null,
     hasID: null
   },
-  sameAsBirthLocation: false,
-  clientNavigation: {
-    currentView: "login"
-  },
   lastPlan: null
 };
+
+const CASE_WORKER_CREDENTIALS = {
+  password: "1234"
+};
+
+const ADMIN_CREDENTIALS = {
+  email: "idhelp.admin.portal@gmail.com",
+  password: "Admin@1234"
+};
+
+const CASE_WORKER_ACCOUNTS = [
+  { workerId: "WK-01", name: "Sarah Ahmed", email: "sarah.ahmed.caseworker@gmail.com", password: "Sarah@1234" },
+  { workerId: "WK-02", name: "Daniel Kim", email: "daniel.kim.caseworker@gmail.com", password: "Daniel@1234" },
+  { workerId: "WK-03", name: "Priya Shah", email: "priya.shah.caseworker@gmail.com", password: "Priya@1234" },
+  { workerId: "WK-04", name: "Marcus Hill", email: "marcus.hill.caseworker@gmail.com", password: "Marcus@1234" }
+];
+
+const DEMO_CLIENT_ACCOUNTS = [
+  { clientId: "CL-1001", name: "Maria Lopez", phone: "(973) 210-1101", username: "maria.lopez", password: "Maria@1234" },
+  { clientId: "CL-1002", name: "James Carter", phone: "(973) 210-1102", username: "james.carter", password: "James@1234" },
+  { clientId: "CL-1003", name: "Aisha Brown", phone: "(973) 210-1103", username: "aisha.brown", password: "Aisha@1234" },
+  { clientId: "CL-1004", name: "Luis Rivera", phone: "(973) 210-1104", username: "luis.rivera", password: "Luis@1234" }
+];
 
 const adminCases = {
   caseworker: [
@@ -113,22 +133,6 @@ const DOCUMENT_TYPES = [
   { key: "birth_certificate", labelKey: "docBirthTitle", fallback: "Birth Certificate" }
 ];
 
-const NJ_BIRTH_CERTIFICATE_URL = "https://www.nj.gov/health/vital/";
-const SSA_CARD_URL = "https://www.ssa.gov/number-card";
-const NJ_MVC_URL = "https://www.nj.gov/mvc/index.html";
-const ADMIN_DEMO_ACCESS = {
-  caseworker: {
-    role: "caseworker",
-    email: "priya.shah@idhelp.org",
-    password: "Priya!2026"
-  },
-  passaic: {
-    role: "passaic",
-    email: "county@idhelp.org",
-    password: "Passaic!2026"
-  }
-};
-
 const uiText = {
   en: {
     adminPortal: "Admin Portal",
@@ -136,16 +140,15 @@ const uiText = {
     adminMark: "Admin Login",
     adminEyebrow: "Staff access",
     adminTitle: "Admin sign in",
-    adminSubtitle: "Use your staff email and password to open the staff dashboard.",
+    adminSubtitle: "Use your admin Gmail and password to open the staff dashboard.",
     adminRoleCaseworker: "Case Worker",
     adminRolePassaic: "Passaic County",
-    adminEmail: "Email",
+    adminEmail: "Gmail",
     adminPassword: "Password",
-    adminLogin: "Login",
-    adminDemoCopy: "Demo access for judges",
-    adminDemoCaseworker: "Demo Case Worker",
-    adminDemoCounty: "Demo County",
-    adminError: "Wrong email or password",
+    adminLogin: "Login with Gmail",
+    adminDemo: "Admin demo",
+    adminDemoPassword: "Demo password",
+    adminError: "Wrong Gmail or password",
     adminDashboardEyebrow: "Staff cases",
     adminDashboardTitle: "Your case dashboard",
     adminDashboardSubtitle: "See the people and cases you are handling today.",
@@ -157,53 +160,51 @@ const uiText = {
     goBack: "Go Back",
     loginEyebrow: "Housing support access",
     loginTitle: "Log in to your housing portal",
-    loginSubtitle: "Use your phone or email to enter the housing portal.",
+    loginSubtitle: "Use your phone or username to enter the housing portal.",
     phoneOption: "Phone Login",
-    workerOption: "Email Login",
+    workerOption: "Username Login",
     phone: "Enter your phone number",
     sendCode: "Send Code",
     code: "Enter code",
     verifyCode: "Verify Code",
-    codeSent: "OTP sent. Check the server console and enter the 4-digit code.",
-    phoneError: "Enter your phone number.",
-    phoneCreateFirst: "Create account first.",
-    codeError: "Enter the 4-digit OTP code.",
-    otpInvalid: "The OTP code is incorrect.",
-    otpExpired: "The OTP code expired. Request a new one.",
-    workerUsername: "Email",
+    codeSent: "Code sent. Enter any 4-digit code.",
+    demoPhone: "Demo phone",
+    demoUsername: "Demo ID",
+    demoPassword: "Demo password",
+    demoCode: "Demo code",
+    phoneError: "Enter your phone number",
+    codeError: "Enter a 4-digit code",
+    workerUsername: "Username",
     workerPassword: "Password",
-    workerPasswordWrong: "Wrong password.",
     createAccountToggle: "Create your account",
     createAccountScreenEyebrow: "Create account",
     createAccountScreenTitle: "Set up your housing portal account",
-    createAccountScreenSubtitle: "Create a phone account for OTP login or an email account with password.",
+    createAccountScreenSubtitle: "Enter your name, phone number, username, and password to create your account.",
     createAccountBack: "Go Back",
-    createAccountPhoneMode: "Phone Account",
-    createAccountEmailMode: "Email Account",
     createAccountName: "Full name",
     createAccountPhone: "Phone number",
-    createAccountEmail: "Email",
+    createAccountUsername: "Create username",
     createAccountPassword: "Create password",
     createAccountRequestWorker: "Request a case worker",
     createAccountSubmit: "Create Account",
     createAccountNamePlaceholder: "Jordan Lee",
     createAccountPhonePlaceholder: "(973) 555-0100",
-    createAccountEmailPlaceholder: "name@example.com",
+    createAccountUsernamePlaceholder: "jordan.lee",
     createAccountPasswordPlaceholder: "Create password",
-    createAccountPhoneSuccess: "Phone account created. You can now log in with your phone number.",
-    createAccountEmailSuccess: "Email account created. You can now log in with your email and password.",
+    createAccountSuccess: "Account created. Use your new username and password to log in.",
     createAccountSuccessRequested: "Account created and your case worker request was sent to Passaic County.",
-    createAccountPhoneExists: "That phone number is already in use.",
-    createAccountEmailExists: "That email is already in use.",
-    createAccountErrorPhone: "Enter your name and phone number.",
-    createAccountErrorEmail: "Enter your name, email, and password.",
+    createAccountExists: "That username or phone number is already in use.",
+    createAccountError: "Enter your name, phone number, username, and password.",
     countyAiButton: "AI Chat Bot",
     countyAiTitle: "AI Chat Bot",
     countyAiSubtitle: "Ask about county workload, delays, assignments, or trends.",
     countyAiPlaceholder: "Ask about system...",
     countyAiAsk: "Ask",
+    loginDemoEyebrow: "Demo access",
+    loginDemoPhoneTitle: "Phone demo",
+    loginDemoUsernameTitle: "Username demo",
     workerLogin: "Login",
-    workerError: "Create account first.",
+    workerError: "Wrong username or password",
     dashboardEyebrow: "Your documents",
     dashboardTitle: "Choose what you need",
     dashboardSubtitle: "Tap a box to see the document you want help with.",
@@ -224,17 +225,12 @@ const uiText = {
     qSSN: "Do you have a Social Security card?",
     qID: "Do you have a State ID?",
     qBorn: "Where were you born?",
-    qNow: "Current location",
-    sameAsBorn: "Same as birthplace",
-    selectState: "Select a state",
-    selectCounty: "Select a county",
-    selectCity: "Select a city",
+    qNow: "Current city (Passaic County)",
     yes: "Yes",
     no: "No",
     getPlan: "Get My Plan",
     yourPlan: "Your plan",
     transport: "Get Transportation Help",
-    planDashboard: "Continue to Dashboard",
     startOver: "Start over",
     helpButton: "Need Help?",
     helpTitle: "Need Help?",
@@ -242,8 +238,7 @@ const uiText = {
     helpSend: "Send",
     helpWelcome: "Hi. I can help with login, documents, transportation, and basic housing portal questions.",
     helpMessageDefault: "I can help with login, birth certificate, Social Security card, State ID, and transportation questions.",
-    planError: "Please answer all 3 yes/no questions.",
-    locationError: "Please select a state, county, and city for both birthplace and current location."
+    planError: "Please answer all 3 yes/no questions."
   },
   es: {
     adminPortal: "Portal Admin",
@@ -251,16 +246,15 @@ const uiText = {
     adminMark: "Ingreso admin",
     adminEyebrow: "Acceso del personal",
     adminTitle: "Ingreso de admin",
-    adminSubtitle: "Use su correo del personal y su contrasena para abrir el panel del personal.",
+    adminSubtitle: "Use su Gmail de admin y su contrasena para abrir el panel del personal.",
     adminRoleCaseworker: "Trabajador social",
     adminRolePassaic: "Passaic County",
-    adminEmail: "Correo",
+    adminEmail: "Gmail",
     adminPassword: "Contrasena",
-    adminLogin: "Entrar",
-    adminDemoCopy: "Acceso demo para jueces",
-    adminDemoCaseworker: "Demo trabajador social",
-    adminDemoCounty: "Demo del condado",
-    adminError: "Correo o contrasena incorrectos",
+    adminLogin: "Entrar con Gmail",
+    adminDemo: "Demo admin",
+    adminDemoPassword: "Contrasena de prueba",
+    adminError: "Gmail o contrasena incorrectos",
     adminDashboardEyebrow: "Casos del personal",
     adminDashboardTitle: "Su panel de casos",
     adminDashboardSubtitle: "Vea las personas y casos que esta manejando hoy.",
@@ -272,53 +266,51 @@ const uiText = {
     goBack: "Volver",
     loginEyebrow: "Acceso a apoyo de vivienda",
     loginTitle: "Inicie sesion en su portal de vivienda",
-    loginSubtitle: "Use su telefono o correo para entrar al portal de vivienda.",
+    loginSubtitle: "Use su telefono o usuario para entrar al portal de vivienda.",
     phoneOption: "Ingreso con telefono",
-    workerOption: "Ingreso con correo",
+    workerOption: "Ingreso con usuario",
     phone: "Ingrese su numero de telefono",
     sendCode: "Enviar codigo",
     code: "Ingrese el codigo",
     verifyCode: "Verificar codigo",
-    codeSent: "OTP enviado. Revise la consola del servidor e ingrese el codigo de 4 digitos.",
-    phoneError: "Ingrese su numero de telefono.",
-    phoneCreateFirst: "Primero cree una cuenta.",
-    codeError: "Ingrese el codigo OTP de 4 digitos.",
-    otpInvalid: "El codigo OTP es incorrecto.",
-    otpExpired: "El codigo OTP vencio. Solicite uno nuevo.",
-    workerUsername: "Correo",
+    codeSent: "Codigo enviado. Ingrese cualquier codigo de 4 digitos.",
+    demoPhone: "Telefono de prueba",
+    demoUsername: "ID de prueba",
+    demoPassword: "Contrasena de prueba",
+    demoCode: "Codigo de prueba",
+    phoneError: "Ingrese su numero de telefono",
+    codeError: "Ingrese un codigo de 4 digitos",
+    workerUsername: "Usuario",
     workerPassword: "Contrasena",
-    workerPasswordWrong: "Contrasena incorrecta.",
     createAccountToggle: "Crear su cuenta",
     createAccountScreenEyebrow: "Crear cuenta",
     createAccountScreenTitle: "Cree su cuenta del portal de vivienda",
-    createAccountScreenSubtitle: "Cree una cuenta con telefono para OTP o una cuenta con correo y contrasena.",
+    createAccountScreenSubtitle: "Ingrese su nombre, telefono, usuario y contrasena para crear su cuenta.",
     createAccountBack: "Volver",
-    createAccountPhoneMode: "Cuenta con telefono",
-    createAccountEmailMode: "Cuenta con correo",
     createAccountName: "Nombre completo",
     createAccountPhone: "Numero de telefono",
-    createAccountEmail: "Correo",
+    createAccountUsername: "Crear usuario",
     createAccountPassword: "Crear contrasena",
     createAccountRequestWorker: "Solicitar un trabajador social",
     createAccountSubmit: "Crear cuenta",
     createAccountNamePlaceholder: "Jordan Lee",
     createAccountPhonePlaceholder: "(973) 555-0100",
-    createAccountEmailPlaceholder: "nombre@ejemplo.com",
+    createAccountUsernamePlaceholder: "jordan.lee",
     createAccountPasswordPlaceholder: "Crear contrasena",
-    createAccountPhoneSuccess: "Cuenta con telefono creada. Ya puede entrar con su numero.",
-    createAccountEmailSuccess: "Cuenta con correo creada. Ya puede entrar con su correo y contrasena.",
+    createAccountSuccess: "Cuenta creada. Use su nuevo usuario y contrasena para entrar.",
     createAccountSuccessRequested: "Cuenta creada y su solicitud de trabajador social fue enviada a Passaic County.",
-    createAccountPhoneExists: "Ese numero de telefono ya esta en uso.",
-    createAccountEmailExists: "Ese correo ya esta en uso.",
-    createAccountErrorPhone: "Ingrese su nombre y numero de telefono.",
-    createAccountErrorEmail: "Ingrese su nombre, correo y contrasena.",
+    createAccountExists: "Ese usuario o numero de telefono ya esta en uso.",
+    createAccountError: "Ingrese su nombre, telefono, usuario y contrasena.",
     countyAiButton: "Chat Bot IA",
     countyAiTitle: "Chat Bot IA",
     countyAiSubtitle: "Pregunte sobre carga del condado, demoras, asignaciones o tendencias.",
     countyAiPlaceholder: "Pregunte sobre el sistema...",
     countyAiAsk: "Preguntar",
+    loginDemoEyebrow: "Acceso demo",
+    loginDemoPhoneTitle: "Demo por telefono",
+    loginDemoUsernameTitle: "Demo por usuario",
     workerLogin: "Entrar",
-    workerError: "Primero cree una cuenta.",
+    workerError: "Nombre de usuario o contrasena incorrectos",
     dashboardEyebrow: "Sus documentos",
     dashboardTitle: "Elija lo que necesita",
     dashboardSubtitle: "Toque un cuadro para ver el documento con el que necesita ayuda.",
@@ -339,17 +331,12 @@ const uiText = {
     qSSN: "Tiene tarjeta de Seguro Social?",
     qID: "Tiene ID estatal?",
     qBorn: "Donde nacio?",
-    qNow: "Ubicacion actual",
-    sameAsBorn: "Igual que lugar de nacimiento",
-    selectState: "Seleccione un estado",
-    selectCounty: "Seleccione un condado",
-    selectCity: "Seleccione una ciudad",
+    qNow: "Ciudad actual (Passaic County)",
     yes: "Si",
     no: "No",
     getPlan: "Obtener mi plan",
     yourPlan: "Su plan",
     transport: "Obtener ayuda de transporte",
-    planDashboard: "Continuar al panel",
     startOver: "Empezar de nuevo",
     helpButton: "Necesita ayuda?",
     helpTitle: "Necesita ayuda?",
@@ -357,18 +344,40 @@ const uiText = {
     helpSend: "Enviar",
     helpWelcome: "Hola. Puedo ayudar con inicio de sesion, documentos, transporte y preguntas basicas del portal.",
     helpMessageDefault: "Puedo ayudar con inicio de sesion, acta de nacimiento, tarjeta de Seguro Social, ID estatal y transporte.",
-    planError: "Responda las 3 preguntas de si o no.",
-    locationError: "Seleccione estado, condado y ciudad para el lugar de nacimiento y la ubicacion actual."
+    planError: "Responda las 3 preguntas de si o no."
   }
+};
+
+const birthCitiesByState = {
+  "New Jersey": ["Paterson", "Passaic", "Clifton", "Newark"],
+  "New York": ["New York City", "Albany", "Buffalo", "Yonkers"],
+  Pennsylvania: ["Philadelphia", "Allentown", "Erie", "Reading"]
+};
+
+const passaicCountyCities = [
+  "Paterson",
+  "Passaic",
+  "Clifton",
+  "Wayne",
+  "Little Falls",
+  "Totowa",
+  "Haledon",
+  "Prospect Park"
+];
+
+const countyWorkerOffices = {
+  "WK-01": "Paterson Office",
+  "WK-02": "Passaic Office",
+  "WK-03": "Clifton Office",
+  "WK-04": "Wayne Office"
 };
 
 async function translateText(text, targetLang) {
   if (targetLang === "en") return text;
 
   try {
-    const response = await fetch(getApiUrl("/api/translate"), {
+    const response = await fetch("/api/translate", {
       method: "POST",
-      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         text,
@@ -580,51 +589,23 @@ function generatePlan(answers, birthPlace, currentCity) {
   const steps = [];
 
   if (!answers.hasBirth) {
-    steps.push({
-      text: "You need a birth certificate.",
-      description: "Use the official New Jersey Vital Statistics page to request a birth certificate online or find next steps.",
-      actionLabel: "Request Birth Certificate",
-      actionLink: NJ_BIRTH_CERTIFICATE_URL,
-      actionExternal: true
-    });
-    steps.push({
-      text: `Go to the Vital Records Office in ${birthPlace}.`
-    });
-    steps.push({
-      text: "Ask for a copy."
-    });
+    steps.push("You need a birth certificate.");
+    steps.push(`Go to the Vital Records Office in ${birthPlace}.`);
+    steps.push("Ask for a copy.");
   }
 
   if (!answers.hasSSN) {
-    steps.push({
-      text: "You need a Social Security card.",
-      description: "Visit the official Social Security website to apply for or replace your SSN card.",
-      actionLabel: "Get Social Security Card",
-      actionLink: SSA_CARD_URL,
-      actionExternal: true
-    });
-    steps.push({
-      text: `Go to SSA office in ${currentCity}.`
-    });
+    steps.push("You need a Social Security card.");
+    steps.push(`Go to SSA office in ${currentCity}.`);
   }
 
   if (!answers.hasID) {
-    steps.push({
-      text: "You need a State ID.",
-      description: "Visit the official New Jersey MVC website to apply for a State ID or schedule an appointment.",
-      actionLabel: "Apply for State ID",
-      actionLink: NJ_MVC_URL,
-      actionExternal: true
-    });
-    steps.push({
-      text: `Go to DMV/MVC in ${currentCity}.`
-    });
+    steps.push("You need a State ID.");
+    steps.push(`Go to DMV/MVC in ${currentCity}.`);
   }
 
   if (steps.length === 0) {
-    steps.push({
-      text: "You have all documents."
-    });
+    steps.push("You have all documents.");
   }
 
   return {
@@ -645,184 +626,15 @@ function fillSelect(selectId, values) {
   });
 }
 
-function setSelectOptions(selectId, values, placeholder, disabled, selectedValue = "") {
-  const select = document.getElementById(selectId);
-  select.innerHTML = "";
+function setupLocationDropdowns() {
+  const stateList = Object.keys(birthCitiesByState);
+  fillSelect("birth-state", stateList);
+  fillSelect("birth-city", birthCitiesByState[stateList[0]]);
+  fillSelect("current-city", passaicCountyCities);
 
-  const placeholderOption = document.createElement("option");
-  placeholderOption.value = "";
-  placeholderOption.textContent = placeholder;
-  select.appendChild(placeholderOption);
-
-  values.forEach((value) => {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = value;
-    option.selected = value === selectedValue;
-    select.appendChild(option);
+  document.getElementById("birth-state").addEventListener("change", (event) => {
+    fillSelect("birth-city", birthCitiesByState[event.target.value]);
   });
-
-  select.disabled = disabled;
-  if (!selectedValue) {
-    select.value = "";
-  }
-}
-
-function getLocationHelper() {
-  return window.USLocationData;
-}
-
-function refreshLocationGroup(prefix) {
-  const t = uiText[state.lang];
-  const helper = getLocationHelper();
-  const stateSelect = document.getElementById(`${prefix}-state`);
-  const countySelect = document.getElementById(`${prefix}-county`);
-  const citySelect = document.getElementById(`${prefix}-city`);
-  const selectedState = stateSelect.value;
-  const selectedCounty = countySelect.value;
-  const availableCounties = helper.getCountiesByState(selectedState);
-  const countyIsValid = availableCounties.includes(selectedCounty);
-  const availableCities = countyIsValid ? helper.getCitiesByStateAndCounty(selectedState, selectedCounty) : [];
-  const cityIsValid = availableCities.includes(citySelect.value);
-
-  setSelectOptions(`${prefix}-county`, availableCounties, t.selectCounty, !selectedState, countyIsValid ? selectedCounty : "");
-  setSelectOptions(`${prefix}-city`, availableCities, t.selectCity, !selectedState || !countyIsValid, cityIsValid ? citySelect.value : "");
-}
-
-function setLocationGroupValues(prefix, location = {}) {
-  const helper = getLocationHelper();
-  const states = helper.getStates();
-  const stateValue = states.includes(location.state) ? location.state : "";
-  const stateSelect = document.getElementById(`${prefix}-state`);
-  const countySelect = document.getElementById(`${prefix}-county`);
-  const citySelect = document.getElementById(`${prefix}-city`);
-
-  stateSelect.value = stateValue;
-  countySelect.value = "";
-  citySelect.value = "";
-  refreshLocationGroup(prefix);
-
-  if (!stateValue) {
-    return;
-  }
-
-  const counties = helper.getCountiesByState(stateValue);
-  const countyValue = counties.includes(location.county) ? location.county : "";
-  countySelect.value = countyValue;
-  refreshLocationGroup(prefix);
-
-  if (!countyValue) {
-    return;
-  }
-
-  const cities = helper.getCitiesByStateAndCounty(stateValue, countyValue);
-  citySelect.value = cities.includes(location.city) ? location.city : "";
-}
-
-function getBirthLocation() {
-  return getSelectedLocation("birth");
-}
-
-function syncCurrentLocationToBirth() {
-  setLocationGroupValues("current", getBirthLocation());
-}
-
-function updateSameAsBirthState(forceValue = null) {
-  const checkbox = document.getElementById("current-same-as-birth-input");
-  const shouldSync = forceValue === null ? checkbox.checked : Boolean(forceValue);
-  const currentState = document.getElementById("current-state");
-  const currentCounty = document.getElementById("current-county");
-  const currentCity = document.getElementById("current-city");
-
-  state.sameAsBirthLocation = shouldSync;
-  checkbox.checked = shouldSync;
-
-  if (shouldSync) {
-    syncCurrentLocationToBirth();
-  }
-
-  [currentState, currentCounty, currentCity].forEach((select) => {
-    select.disabled = shouldSync;
-  });
-}
-
-function bindLocationGroup(prefix) {
-  const stateSelect = document.getElementById(`${prefix}-state`);
-  const countySelect = document.getElementById(`${prefix}-county`);
-  const citySelect = document.getElementById(`${prefix}-city`);
-
-  stateSelect.addEventListener("change", () => {
-    document.getElementById(`${prefix}-county`).value = "";
-    document.getElementById(`${prefix}-city`).value = "";
-    refreshLocationGroup(prefix);
-    if (prefix === "birth" && state.sameAsBirthLocation) {
-      syncCurrentLocationToBirth();
-    }
-  });
-
-  countySelect.addEventListener("change", () => {
-    document.getElementById(`${prefix}-city`).value = "";
-    refreshLocationGroup(prefix);
-    if (prefix === "birth" && state.sameAsBirthLocation) {
-      syncCurrentLocationToBirth();
-    }
-  });
-
-  citySelect.addEventListener("change", () => {
-    if (prefix === "birth" && state.sameAsBirthLocation) {
-      syncCurrentLocationToBirth();
-    }
-  });
-}
-
-function setupLocationDropdowns(savedLocations = null) {
-  const t = uiText[state.lang];
-  const helper = getLocationHelper();
-  const states = helper.getStates();
-  const birthState = savedLocations?.birth?.state || document.getElementById("birth-state").value;
-  const birthCounty = savedLocations?.birth?.county || document.getElementById("birth-county").value;
-  const birthCity = savedLocations?.birth?.city || document.getElementById("birth-city").value;
-  const currentState = savedLocations?.current?.state || document.getElementById("current-state").value;
-  const currentCounty = savedLocations?.current?.county || document.getElementById("current-county").value;
-  const currentCity = savedLocations?.current?.city || document.getElementById("current-city").value;
-  const sameAsBirth = Boolean(
-    birthState &&
-    birthCounty &&
-    birthCity &&
-    birthState === currentState &&
-    birthCounty === currentCounty &&
-    birthCity === currentCity
-  );
-
-  setSelectOptions("birth-state", states, t.selectState, false, states.includes(birthState) ? birthState : "");
-  setSelectOptions("current-state", states, t.selectState, false, states.includes(currentState) ? currentState : "");
-  setLocationGroupValues("birth", {
-    state: birthState,
-    county: birthCounty,
-    city: birthCity
-  });
-  setLocationGroupValues("current", {
-    state: currentState,
-    county: currentCounty,
-    city: currentCity
-  });
-  updateSameAsBirthState(sameAsBirth);
-}
-
-function getSelectedLocation(prefix) {
-  return {
-    state: document.getElementById(`${prefix}-state`).value,
-    county: document.getElementById(`${prefix}-county`).value,
-    city: document.getElementById(`${prefix}-city`).value
-  };
-}
-
-function isLocationComplete(location) {
-  return Boolean(location.state && location.county && location.city);
-}
-
-function formatLocation(location) {
-  return `${location.city}, ${location.county} County, ${location.state}`;
 }
 
 function openScreen(screenId) {
@@ -879,10 +691,15 @@ function syncAdminLayoutMode(screenId) {
 function applyLanguage() {
   const t = uiText[state.lang];
   const isAdmin = state.authView === "admin";
-  const selectedWorkerAccount = getCurrentWorker();
+  const selectedWorkerAccount = getCurrentCaseWorkerAccount() || CASE_WORKER_ACCOUNTS[0];
   const selectedClientAccount = getCurrentClientAccount();
   const clientFirstName = getFirstName(selectedClientAccount?.name);
   const workerFirstName = getFirstName(selectedWorkerAccount?.name);
+  const clientPhoneList = DEMO_CLIENT_ACCOUNTS.map((account) => `${account.name} | ${account.phone}`);
+  const clientUsernameList = DEMO_CLIENT_ACCOUNTS.map((account) => `${account.name} | ${account.username}`);
+  const clientPasswordList = DEMO_CLIENT_ACCOUNTS.map((account) => `${account.name} | ${account.password}`);
+  const caseWorkerEmailList = CASE_WORKER_ACCOUNTS.map((account) => `${account.name} | ${account.email}`);
+  const caseWorkerPasswordList = CASE_WORKER_ACCOUNTS.map((account) => `${account.name} | ${account.password}`);
 
   document.querySelectorAll(".lang-btn").forEach((button) => {
     button.classList.toggle("active", button.dataset.lang === state.lang);
@@ -900,42 +717,44 @@ function applyLanguage() {
   document.getElementById("verify-code-btn").textContent = t.verifyCode;
   document.getElementById("worker-username-label").textContent = t.workerUsername;
   document.getElementById("worker-password-label").textContent = t.workerPassword;
-  document.getElementById("worker-username-input").placeholder = t.createAccountEmailPlaceholder;
-  document.getElementById("worker-password-input").placeholder = t.createAccountPasswordPlaceholder;
   document.getElementById("create-account-toggle-btn").textContent = t.createAccountToggle;
   document.getElementById("create-account-back-btn").textContent = t.createAccountBack;
   document.getElementById("create-account-screen-eyebrow").textContent = t.createAccountScreenEyebrow;
   document.getElementById("create-account-screen-title").textContent = t.createAccountScreenTitle;
   document.getElementById("create-account-screen-subtitle").textContent = t.createAccountScreenSubtitle;
-  document.getElementById("create-account-phone-mode-btn").textContent = t.createAccountPhoneMode;
-  document.getElementById("create-account-email-mode-btn").textContent = t.createAccountEmailMode;
   document.getElementById("create-account-name-label").textContent = t.createAccountName;
   document.getElementById("create-account-phone-label").textContent = t.createAccountPhone;
-  document.getElementById("create-account-email-label").textContent = t.createAccountEmail;
+  document.getElementById("create-account-username-label").textContent = t.createAccountUsername;
   document.getElementById("create-account-password-label").textContent = t.createAccountPassword;
   document.getElementById("create-account-request-worker-label").textContent = t.createAccountRequestWorker;
   document.getElementById("create-account-submit-btn").textContent = t.createAccountSubmit;
   document.getElementById("create-account-name-input").placeholder = t.createAccountNamePlaceholder;
   document.getElementById("create-account-phone-input").placeholder = t.createAccountPhonePlaceholder;
-  document.getElementById("create-account-email-input").placeholder = t.createAccountEmailPlaceholder;
+  document.getElementById("create-account-username-input").placeholder = t.createAccountUsernamePlaceholder;
   document.getElementById("create-account-password-input").placeholder = t.createAccountPasswordPlaceholder;
   document.getElementById("worker-login-btn").textContent = t.workerLogin;
-  document.getElementById("code-demo-note").textContent = t.codeSent;
+  document.getElementById("login-demo-eyebrow").textContent = t.loginDemoEyebrow;
+  document.getElementById("code-demo-note").textContent = `${t.demoCode}: ${state.demoCode}`;
   document.getElementById("admin-login-back-btn").textContent = t.adminBack;
   document.getElementById("admin-google-mark").textContent = t.adminMark;
+  document.getElementById("admin-demo-side-eyebrow").textContent = t.loginDemoEyebrow;
   document.getElementById("caseworker-role-btn").textContent = t.adminRoleCaseworker;
   document.getElementById("passaic-role-btn").textContent = t.adminRolePassaic;
   document.getElementById("admin-email-label").textContent = t.adminEmail;
   document.getElementById("admin-password-label").textContent = t.adminPassword;
   document.getElementById("admin-login-btn").textContent = t.adminLogin;
-  document.getElementById("admin-demo-copy").textContent = t.adminDemoCopy;
-  document.getElementById("admin-demo-caseworker-btn").textContent = t.adminDemoCaseworker;
-  document.getElementById("admin-demo-county-btn").textContent = t.adminDemoCounty;
+  document.getElementById("admin-demo-note").innerHTML = state.adminRole === "caseworker"
+    ? renderDemoList(t.adminDemo, caseWorkerEmailList)
+    : renderDemoList(t.adminDemo, [state.demoAdminEmail]);
+  document.getElementById("admin-password-demo-note").innerHTML = state.adminRole === "caseworker"
+    ? renderDemoList(t.adminDemoPassword, caseWorkerPasswordList)
+    : renderDemoList(t.adminDemoPassword, [ADMIN_CREDENTIALS.password]);
 
   const adminPortalBtn = document.getElementById("admin-portal-btn");
   if (adminPortalBtn) {
     adminPortalBtn.textContent = t.adminPortal;
   }
+  renderLoginDemoPanel(t, clientPhoneList, clientUsernameList, clientPasswordList);
   document.getElementById("dashboard-back-btn").textContent = t.goBack;
   document.getElementById("admin-dashboard-back-btn").textContent = t.goBack;
   document.getElementById("questions-back-btn").textContent = t.goBack;
@@ -986,8 +805,6 @@ function applyLanguage() {
   document.getElementById("q-id").textContent = t.qID;
   document.getElementById("q-born").textContent = t.qBorn;
   document.getElementById("q-now").textContent = t.qNow;
-  document.getElementById("current-same-as-birth-label").textContent = t.sameAsBorn;
-  setupLocationDropdowns();
   document.getElementById("birth-yes").textContent = t.yes;
   document.getElementById("birth-no").textContent = t.no;
   document.getElementById("ssn-yes").textContent = t.yes;
@@ -997,7 +814,6 @@ function applyLanguage() {
   document.getElementById("plan-btn").textContent = t.getPlan;
   document.getElementById("result-page-title").textContent = t.yourPlan;
   document.getElementById("transport-btn").textContent = t.transport;
-  document.getElementById("plan-dashboard-btn").textContent = t.planDashboard;
   document.getElementById("start-over-btn").textContent = t.startOver;
   document.getElementById("help-float-btn").textContent = t.helpButton;
   document.getElementById("chat-title").textContent = t.helpTitle;
@@ -1101,17 +917,15 @@ function setAuthView(view) {
 
   document.getElementById("user-login-panel").classList.toggle("hidden", showAdmin);
   document.getElementById("admin-login-panel").classList.toggle("hidden", !showAdmin);
+  document.getElementById("login-demo-card").classList.remove("hidden");
   document.getElementById("login-error").textContent = "";
   openScreen("login-screen");
 }
 
 function setAdminRole(role) {
   state.adminRole = role;
-  if (role === "caseworker" && state.caseWorkerData.workers.length) {
-    const currentWorkerExists = state.caseWorkerData.workers.some((worker) => worker.id === state.caseWorkerData.currentWorkerId);
-    if (!currentWorkerExists) {
-      state.caseWorkerData.currentWorkerId = state.caseWorkerData.workers[0].id;
-    }
+  if (role === "caseworker" && !CASE_WORKER_ACCOUNTS.some((account) => account.workerId === state.caseWorkerData.currentWorkerId)) {
+    state.caseWorkerData.currentWorkerId = CASE_WORKER_ACCOUNTS[0].workerId;
   }
   document.getElementById("caseworker-role-btn").classList.toggle("active", role === "caseworker");
   document.getElementById("passaic-role-btn").classList.toggle("active", role === "passaic");
@@ -1129,20 +943,11 @@ function setAdminRole(role) {
     loadCaseWorkerDashboard();
   }
   if (state.authView === "admin") {
-    document.getElementById("admin-email-input").value = "";
+    const selectedWorkerAccount = CASE_WORKER_ACCOUNTS.find((account) => account.workerId === state.caseWorkerData.currentWorkerId) || CASE_WORKER_ACCOUNTS[0];
+    document.getElementById("admin-email-input").value = role === "caseworker" ? selectedWorkerAccount.email : state.demoAdminEmail;
     document.getElementById("admin-password-input").value = "";
   }
   applyLanguage();
-}
-
-function setCreateAccountMode(mode) {
-  state.createAccountMode = mode;
-  const isPhoneMode = mode === "phone";
-  document.getElementById("create-account-phone-mode-btn").classList.toggle("active", isPhoneMode);
-  document.getElementById("create-account-email-mode-btn").classList.toggle("active", !isPhoneMode);
-  document.getElementById("create-account-phone-fields").classList.toggle("hidden", !isPhoneMode);
-  document.getElementById("create-account-email-fields").classList.toggle("hidden", isPhoneMode);
-  document.getElementById("create-account-error").textContent = "";
 }
 
 function setLoginView(view) {
@@ -1155,7 +960,6 @@ function setLoginView(view) {
   document.getElementById("worker-login-form").classList.toggle("hidden", showPhone);
   document.getElementById("login-error").textContent = "";
   document.getElementById("create-account-error").textContent = "";
-  resetCodeEntry();
   applyLanguage();
 }
 
@@ -1172,225 +976,70 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function renderDemoList(label, entries) {
+  return `
+    <div class="demo-note-title">${escapeHtml(label)}</div>
+    <div class="demo-note-list">
+      ${entries.map((entry) => `<div class="demo-note-item">${escapeHtml(entry)}</div>`).join("")}
+    </div>
+  `;
+}
+
+function renderDemoSection(label, entries) {
+  return `
+    <div class="login-demo-section">
+      <span class="login-demo-label">${escapeHtml(label)}</span>
+      ${entries.map((entry) => `<div class="login-demo-item">${escapeHtml(entry)}</div>`).join("")}
+    </div>
+  `;
+}
+
+function renderAdminCredentialPairs(title, accounts) {
+  return `
+    <div class="login-demo-section">
+      <span class="login-demo-label">${escapeHtml(title)}</span>
+      ${accounts.map((account) => `
+        <div class="login-demo-item">
+          <div>${escapeHtml(account.email)}</div>
+          <div>${escapeHtml(state.lang === "es" ? `Contrasena: ${account.password}` : `Pass: ${account.password}`)}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderLoginDemoPanel(t, clientPhoneList, clientUsernameList, clientPasswordList) {
+  if (state.authView === "admin") {
+    const title = state.adminRole === "caseworker"
+      ? (state.lang === "es" ? "Demo de trabajador social" : "Case Worker Demo")
+      : (state.lang === "es" ? "Demo de Passaic County" : "Passaic County Demo");
+    const sections = state.adminRole === "caseworker"
+      ? [
+        renderAdminCredentialPairs(title, CASE_WORKER_ACCOUNTS)
+      ]
+      : [
+        renderAdminCredentialPairs(title, [{ email: state.demoAdminEmail, password: ADMIN_CREDENTIALS.password }])
+      ];
+
+    document.getElementById("login-demo-title").textContent = title;
+    document.getElementById("login-demo-list").innerHTML = sections.join("");
+    return;
+  }
+
+  const title = state.loginView === "phone" ? t.loginDemoPhoneTitle : t.loginDemoUsernameTitle;
+  const sections = state.loginView === "phone"
+    ? [renderDemoSection(t.demoPhone, clientPhoneList)]
+    : [
+      renderDemoSection(t.demoUsername, clientUsernameList),
+      renderDemoSection(t.demoPassword, clientPasswordList)
+    ];
+
+  document.getElementById("login-demo-title").textContent = title;
+  document.getElementById("login-demo-list").innerHTML = sections.join("");
+}
+
 function normalizePhone(phone) {
   return String(phone || "").replace(/\D/g, "");
-}
-
-function hasAuthenticatedClientUser() {
-  return Boolean(state.clientPortalData.currentUser?.clientId);
-}
-
-function userNeedsIntake() {
-  return hasAuthenticatedClientUser() && !state.clientPortalData.currentUser?.hasCompletedIntake;
-}
-
-function getClientEntryView() {
-  if (!hasAuthenticatedClientUser()) {
-    return "login";
-  }
-
-  return userNeedsIntake() ? "intake" : "dashboard";
-}
-
-function renderClientLoginPage({ reason = "manual" } = {}) {
-  state.authView = "user";
-  state.clientNavigation.currentView = "login";
-  openScreen("login-screen");
-}
-
-function renderClientCreateAccountPage({ reason = "manual" } = {}) {
-  state.authView = "user";
-  state.clientNavigation.currentView = "createAccount";
-  openScreen("create-account-screen");
-}
-
-function renderClientIntakePage({ reason = "manual", prefillFromSaved = false } = {}) {
-  console.log("[router] intake page render", { reason, prefillFromSaved });
-  state.clientNavigation.currentView = "intake";
-  document.getElementById("plan-error-box").textContent = "";
-  if (prefillFromSaved) {
-    loadIntakeFromCurrentUser();
-  }
-  openScreen("questions-screen");
-}
-
-function renderClientPlanPage({ reason = "manual" } = {}) {
-  console.log("[router] plan page render", { reason });
-  state.clientNavigation.currentView = "plan";
-  openScreen("result-screen");
-}
-
-function renderClientDashboardPage({ reason = "manual" } = {}) {
-  console.log("[router] dashboard page render", { reason });
-  state.clientNavigation.currentView = "dashboard";
-  loadClientPortalChat();
-  hideClientChatPanel();
-  applyLanguage();
-  openScreen("dashboard-screen");
-}
-
-function navigateTo(view, options = {}) {
-  const { reason = "manual", prefillFromSaved = false } = options;
-  let resolvedView = view;
-
-  if (!hasAuthenticatedClientUser() && !["login", "createAccount"].includes(view)) {
-    resolvedView = "login";
-  } else if (hasAuthenticatedClientUser() && userNeedsIntake() && view === "dashboard") {
-    resolvedView = "intake";
-  }
-
-  console.log("[router] navigate", {
-    requestedView: view,
-    resolvedView,
-    reason,
-    isLoggedIn: hasAuthenticatedClientUser(),
-    hasCompletedIntake: Boolean(state.clientPortalData.currentUser?.hasCompletedIntake)
-  });
-
-  if (resolvedView === "login") {
-    renderClientLoginPage({ reason });
-    return;
-  }
-
-  if (resolvedView === "createAccount") {
-    renderClientCreateAccountPage({ reason });
-    return;
-  }
-
-  if (resolvedView === "intake") {
-    renderClientIntakePage({
-      reason,
-      prefillFromSaved
-    });
-    return;
-  }
-
-  if (resolvedView === "plan") {
-    renderClientPlanPage({ reason });
-    return;
-  }
-
-  renderClientDashboardPage({ reason });
-}
-
-function resetPlanState() {
-  state.answers.hasBirth = null;
-  state.answers.hasSSN = null;
-  state.answers.hasID = null;
-  state.lastPlan = null;
-}
-
-function applyChoiceButtonState(groupKey, value) {
-  const row = document.querySelector(`.choice-row[data-group="${groupKey}"]`);
-  if (!row) {
-    return;
-  }
-
-  row.querySelectorAll(".choice-btn").forEach((button) => {
-    button.classList.toggle("active", String(value) === button.dataset.value);
-  });
-}
-
-function loadIntakeFromCurrentUser() {
-  const user = getCurrentClientAccount();
-  const savedAnswers = user?.documentAnswers || null;
-  const savedLocations = user?.intakeLocations || null;
-
-  resetPlanState();
-  state.sameAsBirthLocation = false;
-
-  if (!savedAnswers) {
-    document.querySelectorAll(".choice-row[data-group]").forEach((row) => {
-      row.querySelectorAll(".choice-btn").forEach((button) => button.classList.remove("active"));
-    });
-  } else {
-    state.answers.hasBirth = savedAnswers.hasBirth;
-    state.answers.hasSSN = savedAnswers.hasSSN;
-    state.answers.hasID = savedAnswers.hasID;
-    applyChoiceButtonState("hasBirth", savedAnswers.hasBirth);
-    applyChoiceButtonState("hasSSN", savedAnswers.hasSSN);
-    applyChoiceButtonState("hasID", savedAnswers.hasID);
-  }
-
-  setupLocationDropdowns(savedLocations || undefined);
-  state.lastPlan = user?.roadmapPlan || null;
-}
-
-function routeClientEntry(reason = "startup") {
-  const targetView = getClientEntryView();
-
-  if (reason === "startup") {
-    console.log("[router] app startup route decision", { targetView });
-  } else {
-    console.log("[router] login success route decision", { targetView });
-  }
-
-  navigateTo(targetView, {
-    reason,
-    prefillFromSaved: targetView === "intake"
-  });
-}
-
-async function loginAdminUser({ role, email, password }) {
-  const data = await fetchJson("/api/admin/login", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ role, email, password })
-  });
-
-  state.adminRole = role;
-  document.getElementById("caseworker-role-btn").classList.toggle("active", role === "caseworker");
-  document.getElementById("passaic-role-btn").classList.toggle("active", role === "passaic");
-  document.getElementById("admin-case-view").classList.toggle("hidden", role !== "caseworker");
-  document.getElementById("admin-county-view").classList.toggle("hidden", role !== "passaic");
-
-  if (role === "caseworker" && data.workerId) {
-    state.caseWorkerData.currentWorkerId = data.workerId;
-    await loadCaseWorkerDashboard();
-  }
-
-  if (role === "passaic") {
-    await loadCountyDashboard();
-  }
-
-  document.getElementById("login-error").textContent = "";
-  openScreen("admin-dashboard-screen");
-}
-
-function handleLoggedInUser(user) {
-  state.clientPortalData.currentClientId = user.clientId;
-  state.clientPortalData.currentUser = user;
-  routeClientEntry("login_success");
-}
-
-async function restoreClientSession() {
-  try {
-    const data = await fetchJson("/api/auth/me");
-    if (data && data.authenticated && data.user) {
-      state.clientPortalData.currentClientId = data.user.clientId;
-      state.clientPortalData.currentUser = data.user;
-      routeClientEntry("startup");
-      return true;
-    }
-  } catch (error) {
-    // Ignore session restore failures and keep the user on the login screen.
-  }
-
-  return false;
-}
-
-async function logoutClientUser() {
-  try {
-    await fetchJson("/api/auth/logout", { method: "POST" });
-  } catch (error) {
-    // Allow the UI to reset locally even if the server is unavailable.
-  }
-
-  state.clientPortalData.currentClientId = null;
-  state.clientPortalData.currentUser = null;
-  resetPlanState();
-  hideClientChatPanel();
-  navigateTo("login", { reason: "logout" });
 }
 
 async function createClientAccount() {
@@ -1398,83 +1047,59 @@ async function createClientAccount() {
   const errorBox = document.getElementById("create-account-error");
   const name = document.getElementById("create-account-name-input").value.trim();
   const phone = document.getElementById("create-account-phone-input").value.trim();
-  const email = document.getElementById("create-account-email-input").value.trim();
+  const username = document.getElementById("create-account-username-input").value.trim();
   const password = document.getElementById("create-account-password-input").value.trim();
   const requestCaseWorker = document.getElementById("create-account-request-worker-input").checked;
 
+  if (!name || !phone || !username || !password) {
+    errorBox.textContent = t.createAccountError;
+    return;
+  }
+
   try {
-    const route = state.createAccountMode === "phone" ? "/api/auth/signup/phone" : "/api/auth/signup/email";
-    const body = state.createAccountMode === "phone"
-      ? { name, phone, request_case_worker: requestCaseWorker }
-      : { name, email, password, request_case_worker: requestCaseWorker };
-
-    if (state.createAccountMode === "phone" && (!name || !phone)) {
-      errorBox.textContent = t.createAccountErrorPhone;
-      return;
-    }
-
-    if (state.createAccountMode === "email" && (!name || !email || !password)) {
-      errorBox.textContent = t.createAccountErrorEmail;
-      return;
-    }
-
-    await fetchJson(route, {
+    const data = await fetchJson("/api/client-accounts", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body)
+      body: JSON.stringify({ name, phone, username, password, request_case_worker: requestCaseWorker })
     });
 
-    if (state.createAccountMode === "phone") {
-      document.getElementById("phone-input").value = phone;
-      setLoginView("phone");
-    } else {
-      document.getElementById("worker-username-input").value = email;
-      document.getElementById("worker-password-input").value = "";
-      setLoginView("worker");
-    }
-
+    DEMO_CLIENT_ACCOUNTS.push(data.account);
+    document.getElementById("worker-username-input").value = username;
+    document.getElementById("worker-password-input").value = password;
+    document.getElementById("phone-input").value = phone;
     document.getElementById("create-account-name-input").value = "";
     document.getElementById("create-account-phone-input").value = "";
-    document.getElementById("create-account-email-input").value = "";
+    document.getElementById("create-account-username-input").value = "";
     document.getElementById("create-account-password-input").value = "";
     document.getElementById("create-account-request-worker-input").checked = false;
     errorBox.textContent = "";
-    navigateTo("login", { reason: "account_created" });
+    setLoginView("worker");
+    openScreen("login-screen");
     document.getElementById("login-error").textContent =
-      requestCaseWorker
-        ? t.createAccountSuccessRequested
-        : (state.createAccountMode === "phone" ? t.createAccountPhoneSuccess : t.createAccountEmailSuccess);
+      requestCaseWorker ? t.createAccountSuccessRequested : t.createAccountSuccess;
   } catch (error) {
     errorBox.textContent =
       error.message === "SERVER_OFFLINE" ? showServerOfflineMessage() : error.message;
   }
 }
 
-function getApiUrl(url) {
-  if (typeof url !== "string" || !url.startsWith("/api/")) {
-    return url;
+async function loadStoredClientAccounts() {
+  try {
+    const data = await fetchJson("/api/client-accounts");
+
+    if (Array.isArray(data.accounts) && data.accounts.length) {
+      DEMO_CLIENT_ACCOUNTS.splice(0, DEMO_CLIENT_ACCOUNTS.length, ...data.accounts);
+    }
+  } catch (error) {
+    // Keep bundled demo accounts when the server is unavailable.
   }
-
-  const { protocol, hostname, port } = window.location;
-  const isLocalHost = hostname === "127.0.0.1" || hostname === "localhost";
-  const isLocalPreview = protocol === "file:" || (isLocalHost && port && port !== "3000");
-
-  if (isLocalPreview) {
-    return `http://127.0.0.1:3000${url}`;
-  }
-
-  return url;
 }
 
 async function fetchJson(url, options = {}) {
   let response;
-  const fetchOptions = {
-    credentials: "include",
-    ...options
-  };
 
   try {
-    response = await fetch(getApiUrl(url), fetchOptions);
+    response = await fetch(url, options);
   } catch (error) {
     throw new Error("SERVER_OFFLINE");
   }
@@ -2041,14 +1666,32 @@ async function askAI() {
 
 function resetCodeEntry() {
   state.otpSent = false;
-  state.pendingPhoneNumber = "";
   document.getElementById("code-entry-block").classList.add("hidden");
   document.getElementById("code-input").value = "";
 }
 
+function generateDemoIdentity() {
+  const defaultClient = DEMO_CLIENT_ACCOUNTS[0];
+
+  if (!defaultClient) {
+    return;
+  }
+
+  state.demoUsername = defaultClient.username;
+  state.demoPhone = defaultClient.phone;
+  state.demoCode = "1234";
+
+  document.getElementById("phone-input").value = state.demoPhone;
+  document.getElementById("worker-username-input").value = state.demoUsername;
+  document.getElementById("admin-email-input").value = state.demoAdminEmail;
+}
+
 // Keep login success separate from the screen implementation.
 function showApp() {
-  renderClientDashboardPage({ reason: "show_app" });
+  loadClientPortalChat();
+  hideClientChatPanel();
+  applyLanguage();
+  openScreen("dashboard-screen");
 }
 
 function hideClientChatPanel() {
@@ -2090,8 +1733,21 @@ async function showClientDocuments(documentType) {
   openClientDocumentsPage(documentType);
 }
 
+function getClientAccountByPhone(phone) {
+  const normalizedPhone = normalizePhone(phone);
+  return DEMO_CLIENT_ACCOUNTS.find((account) => normalizePhone(account.phone) === normalizedPhone) || null;
+}
+
+function getClientAccountByUsername(username) {
+  return DEMO_CLIENT_ACCOUNTS.find((account) => account.username === username) || null;
+}
+
 function getCurrentClientAccount() {
-  return state.clientPortalData.currentUser;
+  return DEMO_CLIENT_ACCOUNTS.find((account) => account.clientId === state.clientPortalData.currentClientId) || null;
+}
+
+function getCurrentCaseWorkerAccount() {
+  return CASE_WORKER_ACCOUNTS.find((account) => account.workerId === state.caseWorkerData.currentWorkerId) || null;
 }
 
 function getFirstName(name) {
@@ -2547,7 +2203,7 @@ function renderClientDocumentsView() {
   `;
 
   document.getElementById("client-documents-back-btn").addEventListener("click", () => {
-    navigateTo("dashboard", { reason: "client_documents_back" });
+    openScreen("dashboard-screen");
   });
 
   container.querySelectorAll("[data-document-card]").forEach((button) => {
@@ -3521,23 +3177,19 @@ async function sendMessage() {
   await sendWorkerMessage(selectedClient.id);
 }
 
-function showQuestionScreen(options = {}) {
-  const { prefillFromSaved = false } = options;
-  navigateTo("intake", {
-    reason: "show_question_screen",
-    prefillFromSaved
-  });
+function showQuestionScreen() {
+  document.getElementById("plan-error-box").textContent = "";
+  openScreen("questions-screen");
 }
 
 function showResultScreen() {
-  navigateTo("plan", { reason: "show_result_screen" });
+  openScreen("result-screen");
 }
 
 function startOver() {
   state.answers.hasBirth = null;
   state.answers.hasSSN = null;
   state.answers.hasID = null;
-  state.sameAsBirthLocation = false;
 
   document.querySelectorAll(".choice-btn").forEach((button) => {
     if (button.closest("[data-group]")) {
@@ -3548,15 +3200,7 @@ function startOver() {
   document.getElementById("plan-steps").innerHTML = "";
   document.getElementById("transport-btn").classList.add("hidden");
   document.getElementById("plan-error-box").textContent = "";
-  document.getElementById("birth-state").value = "";
-  document.getElementById("birth-county").value = "";
-  document.getElementById("birth-city").value = "";
-  document.getElementById("current-state").value = "";
-  document.getElementById("current-county").value = "";
-  document.getElementById("current-city").value = "";
-  document.getElementById("current-same-as-birth-input").checked = false;
-  setupLocationDropdowns();
-  navigateTo("intake", { reason: "start_over" });
+  openScreen("questions-screen");
 }
 
 function attachChoiceHandlers() {
@@ -3576,120 +3220,46 @@ function attachChoiceHandlers() {
 
 async function showPlan() {
   const errorBox = document.getElementById("plan-error-box");
-  try {
-    errorBox.textContent = "";
-    console.log("[intake] Get My Plan clicked");
+  errorBox.textContent = "";
 
-    if (
-      state.answers.hasBirth === null ||
-      state.answers.hasSSN === null ||
-      state.answers.hasID === null
-    ) {
-      errorBox.textContent = uiText[state.lang].planError;
-      return;
-    }
-
-    const birthLocation = getSelectedLocation("birth");
-    const currentLocation = getSelectedLocation("current");
-    console.log("[intake] Collected intake data", {
-      answers: { ...state.answers },
-      birthLocation,
-      currentLocation
-    });
-
-    if (!isLocationComplete(birthLocation) || !isLocationComplete(currentLocation)) {
-      errorBox.textContent = uiText[state.lang].locationError;
-      return;
-    }
-
-    const birthPlace = formatLocation(birthLocation);
-    const currentPlace = formatLocation(currentLocation);
-
-    const plan = generatePlan(state.answers, birthPlace, currentPlace);
-    state.lastPlan = plan;
-    console.log("[intake] Roadmap data generated", plan);
-
-    const translatedSteps = [];
-
-    for (const step of plan.steps) {
-      translatedSteps.push({
-        text: await translateText(step.text, state.lang),
-        description: step.description ? await translateText(step.description, state.lang) : "",
-        actionLabel: step.actionLabel ? await translateText(step.actionLabel, state.lang) : "",
-        actionLink: step.actionLink || "",
-        actionExternal: Boolean(step.actionExternal)
-      });
-    }
-
-    const list = document.getElementById("plan-steps");
-    list.innerHTML = "";
-
-    translatedSteps.forEach((step) => {
-      const li = document.createElement("li");
-      li.className = "plan-step-item";
-
-      const title = document.createElement("p");
-      title.className = "plan-step-text";
-      title.textContent = step.text;
-      li.appendChild(title);
-
-      if (step.description) {
-        const description = document.createElement("p");
-        description.className = "small-text plan-step-description";
-        description.textContent = step.description;
-        li.appendChild(description);
-      }
-
-      if (step.actionLink && step.actionLabel) {
-        const actionLink = document.createElement("a");
-        actionLink.className = "secondary-btn plan-step-link";
-        actionLink.href = step.actionLink;
-        if (step.actionExternal) {
-          actionLink.target = "_blank";
-          actionLink.rel = "noopener noreferrer";
-        }
-        actionLink.textContent = step.actionLabel;
-        li.appendChild(actionLink);
-      }
-
-      list.appendChild(li);
-    });
-
-    const transportButton = document.getElementById("transport-btn");
-    transportButton.classList.toggle("hidden", !plan.transportation_needed);
-    transportButton.onclick = () => {
-      window.location.href = "https://www.njtransit.com";
-    };
-
-    const data = await fetchJson("/api/auth/intake", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        documentAnswers: {
-          hasBirth: state.answers.hasBirth,
-          hasSSN: state.answers.hasSSN,
-          hasID: state.answers.hasID
-        },
-        intakeLocations: {
-          birth: birthLocation,
-          current: currentLocation
-        },
-        roadmapPlan: plan
-      })
-    });
-
-    state.clientPortalData.currentUser = data.user;
-    console.log("[intake] Intake data saved", data.user);
-    console.log("[router] intake completion route decision", { targetView: "plan" });
-    console.log("[intake] Rendering roadmap page");
-    navigateTo("plan", { reason: "intake_completed" });
-  } catch (error) {
-    console.error("[intake] showPlan failed", error);
-    errorBox.textContent =
-      error?.message === "SERVER_OFFLINE"
-        ? showServerOfflineMessage()
-        : (error?.message || "Could not create your plan.");
+  if (
+    state.answers.hasBirth === null ||
+    state.answers.hasSSN === null ||
+    state.answers.hasID === null
+  ) {
+    errorBox.textContent = uiText[state.lang].planError;
+    return;
   }
+
+  const birthState = document.getElementById("birth-state").value;
+  const birthCity = document.getElementById("birth-city").value;
+  const currentCity = document.getElementById("current-city").value;
+  const birthPlace = `${birthCity}, ${birthState}`;
+
+  const plan = generatePlan(state.answers, birthPlace, currentCity);
+  state.lastPlan = plan;
+  const translatedSteps = [];
+
+  for (const step of plan.steps) {
+    translatedSteps.push(await translateText(step, state.lang));
+  }
+
+  const list = document.getElementById("plan-steps");
+  list.innerHTML = "";
+
+  translatedSteps.forEach((step) => {
+    const li = document.createElement("li");
+    li.textContent = step;
+    list.appendChild(li);
+  });
+
+  const transportButton = document.getElementById("transport-btn");
+  transportButton.classList.toggle("hidden", !plan.transportation_needed);
+  transportButton.onclick = () => {
+    window.location.href = "https://www.njtransit.com";
+  };
+
+  showResultScreen();
 }
 
 function addChatMessage(role, text) {
@@ -3775,20 +3345,12 @@ function bindEvents() {
   });
 
   document.getElementById("create-account-toggle-btn").addEventListener("click", () => {
-    navigateTo("createAccount", { reason: "open_create_account" });
+    openScreen("create-account-screen");
     document.getElementById("create-account-name-input").focus();
   });
 
   document.getElementById("create-account-back-btn").addEventListener("click", () => {
-    navigateTo("login", { reason: "create_account_back" });
-  });
-
-  document.getElementById("create-account-phone-mode-btn").addEventListener("click", () => {
-    setCreateAccountMode("phone");
-  });
-
-  document.getElementById("create-account-email-mode-btn").addEventListener("click", () => {
-    setCreateAccountMode("email");
+    openScreen("login-screen");
   });
 
   document.getElementById("create-account-submit-btn").addEventListener("click", async () => {
@@ -3798,7 +3360,7 @@ function bindEvents() {
   [
     "create-account-name-input",
     "create-account-phone-input",
-    "create-account-email-input",
+    "create-account-username-input",
     "create-account-password-input"
   ].forEach((id) => {
     document.getElementById(id).addEventListener("keydown", async (event) => {
@@ -3832,32 +3394,22 @@ function bindEvents() {
   });
 
   document.getElementById("send-code-btn").addEventListener("click", () => {
-    void (async () => {
-      const t = uiText[state.lang];
-      const phone = document.getElementById("phone-input").value.trim();
+    const t = uiText[state.lang];
+    const phone = document.getElementById("phone-input").value.trim();
+    const clientAccount = getClientAccountByPhone(phone);
 
-      if (!phone) {
-        document.getElementById("login-error").textContent = t.phoneError;
-        return;
-      }
+    if (!clientAccount) {
+      document.getElementById("login-error").textContent = t.phoneError;
+      return;
+    }
 
-      try {
-        await fetchJson("/api/auth/login/phone/send-otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phone })
-        });
-
-        state.otpSent = true;
-        state.pendingPhoneNumber = phone;
-        document.getElementById("code-entry-block").classList.remove("hidden");
-        document.getElementById("login-error").textContent = t.codeSent;
-        document.getElementById("code-input").focus();
-      } catch (error) {
-        document.getElementById("login-error").textContent =
-          error.message === "SERVER_OFFLINE" ? showServerOfflineMessage() : error.message;
-      }
-    })();
+    // Demo-only OTP flow with no backend.
+    state.otpSent = true;
+    state.clientPortalData.currentClientId = clientAccount.clientId;
+    document.getElementById("code-entry-block").classList.remove("hidden");
+    document.getElementById("login-error").textContent = `${t.codeSent} ${state.demoCode}`;
+    document.getElementById("code-demo-note").textContent = `${t.demoCode}: ${state.demoCode}`;
+    document.getElementById("code-input").focus();
   });
 
   document.getElementById("phone-input").addEventListener("keydown", (event) => {
@@ -3868,29 +3420,15 @@ function bindEvents() {
   });
 
   document.getElementById("verify-code-btn").addEventListener("click", () => {
-    void (async () => {
-      const t = uiText[state.lang];
-      const code = document.getElementById("code-input").value.trim();
+    const t = uiText[state.lang];
+    const code = document.getElementById("code-input").value.trim();
 
-      if (!state.otpSent || !/^\d{4}$/.test(code)) {
-        document.getElementById("login-error").textContent = t.codeError;
-        return;
-      }
+    if (!state.otpSent || !/^\d{4}$/.test(code)) {
+      document.getElementById("login-error").textContent = t.codeError;
+      return;
+    }
 
-      try {
-        const data = await fetchJson("/api/auth/login/phone/verify-otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ phone: state.pendingPhoneNumber, otp: code })
-        });
-        resetCodeEntry();
-        document.getElementById("login-error").textContent = "";
-        handleLoggedInUser(data.user);
-      } catch (error) {
-        document.getElementById("login-error").textContent =
-          error.message === "SERVER_OFFLINE" ? showServerOfflineMessage() : error.message;
-      }
-    })();
+    showApp();
   });
 
   document.getElementById("code-input").addEventListener("keydown", (event) => {
@@ -3903,23 +3441,21 @@ function bindEvents() {
   document.getElementById("worker-login-form").addEventListener("submit", (event) => {
     event.preventDefault();
 
-    void (async () => {
-      const email = document.getElementById("worker-username-input").value.trim();
-      const password = document.getElementById("worker-password-input").value.trim();
+    const t = uiText[state.lang];
+    const username = document.getElementById("worker-username-input").value.trim();
+    const password = document.getElementById("worker-password-input").value.trim();
+    const clientAccount = getClientAccountByUsername(username);
 
-      try {
-        const data = await fetchJson("/api/auth/login/email", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password })
-        });
-        document.getElementById("login-error").textContent = "";
-        handleLoggedInUser(data.user);
-      } catch (error) {
-        document.getElementById("login-error").textContent =
-          error.message === "SERVER_OFFLINE" ? showServerOfflineMessage() : error.message;
-      }
-    })();
+    if (
+      !clientAccount ||
+      password !== clientAccount.password
+    ) {
+      document.getElementById("login-error").textContent = t.workerError;
+      return;
+    }
+
+    state.clientPortalData.currentClientId = clientAccount.clientId;
+    showApp();
   });
 
   document.getElementById("admin-login-form").addEventListener("submit", async (event) => {
@@ -3928,19 +3464,27 @@ function bindEvents() {
     const t = uiText[state.lang];
     const email = document.getElementById("admin-email-input").value.trim();
     const password = document.getElementById("admin-password-input").value.trim();
-    
-    try {
-      await loginAdminUser({
-        role: state.adminRole,
-        email,
-        password
-      });
-    } catch (error) {
-      document.getElementById("login-error").textContent =
-        error.message === "SERVER_OFFLINE"
-          ? showServerOfflineMessage()
-          : (error.message || t.adminError);
+    let workerAccount = null;
+
+    if (state.adminRole === "caseworker") {
+      workerAccount = CASE_WORKER_ACCOUNTS.find((account) => account.email === email && account.password === password) || null;
+      if (!workerAccount) {
+        document.getElementById("login-error").textContent = t.adminError;
+        return;
+      }
+      state.caseWorkerData.currentWorkerId = workerAccount.workerId;
+    } else if (email !== ADMIN_CREDENTIALS.email || password !== ADMIN_CREDENTIALS.password) {
+      document.getElementById("login-error").textContent = t.adminError;
+      return;
     }
+
+    if (state.adminRole === "caseworker") {
+      await loadCaseWorkerDashboard();
+    }
+    if (state.adminRole === "passaic") {
+      await loadCountyDashboard();
+    }
+    openScreen("admin-dashboard-screen");
   });
 
   document.querySelectorAll(".doc-card").forEach((card) => {
@@ -3962,11 +3506,11 @@ function bindEvents() {
   });
 
   document.getElementById("dashboard-continue-btn").addEventListener("click", () => {
-    navigateTo("intake", { reason: "dashboard_continue", prefillFromSaved: true });
+    showQuestionScreen();
   });
 
   document.getElementById("dashboard-back-btn").addEventListener("click", () => {
-    void logoutClientUser();
+    openScreen("login-screen");
   });
 
   document.getElementById("admin-dashboard-back-btn").addEventListener("click", () => {
@@ -3974,63 +3518,14 @@ function bindEvents() {
   });
 
   document.getElementById("questions-back-btn").addEventListener("click", () => {
-    if (state.clientPortalData.currentUser?.hasCompletedIntake) {
-      navigateTo("dashboard", { reason: "questions_back_completed" });
-      return;
-    }
-
-    navigateTo("intake", { reason: "questions_back_incomplete", prefillFromSaved: false });
-  });
-
-  document.getElementById("questions-logout-btn").addEventListener("click", () => {
-    void logoutClientUser();
-  });
-
-  document.getElementById("admin-demo-caseworker-btn").addEventListener("click", async () => {
-    const demo = ADMIN_DEMO_ACCESS.caseworker;
-    setAdminRole(demo.role);
-    document.getElementById("admin-email-input").value = demo.email;
-    document.getElementById("admin-password-input").value = demo.password;
-
-    try {
-      await loginAdminUser(demo);
-    } catch (error) {
-      document.getElementById("login-error").textContent =
-        error.message === "SERVER_OFFLINE"
-          ? showServerOfflineMessage()
-          : error.message;
-    }
-  });
-
-  document.getElementById("admin-demo-county-btn").addEventListener("click", async () => {
-    const demo = ADMIN_DEMO_ACCESS.passaic;
-    setAdminRole(demo.role);
-    document.getElementById("admin-email-input").value = demo.email;
-    document.getElementById("admin-password-input").value = demo.password;
-
-    try {
-      await loginAdminUser(demo);
-    } catch (error) {
-      document.getElementById("login-error").textContent =
-        error.message === "SERVER_OFFLINE"
-          ? showServerOfflineMessage()
-          : error.message;
-    }
+    openScreen("dashboard-screen");
   });
 
   document.getElementById("result-back-btn").addEventListener("click", () => {
-    navigateTo("intake", { reason: "plan_back", prefillFromSaved: true });
+    showQuestionScreen();
   });
 
-  document.getElementById("plan-dashboard-btn").addEventListener("click", () => {
-    console.log("[router] Go to My Dashboard click");
-    navigateTo("dashboard", { reason: "plan_to_dashboard" });
-  });
-
-  document.getElementById("current-same-as-birth-input").addEventListener("change", (event) => {
-    updateSameAsBirthState(Boolean(event.target.checked));
-  });
-
+  document.getElementById("plan-btn").addEventListener("click", showPlan);
   document.getElementById("start-over-btn").addEventListener("click", startOver);
   document.getElementById("help-float-btn").addEventListener("click", openHelpChat);
   document.getElementById("chat-close-btn").addEventListener("click", closeHelpChat);
@@ -4081,35 +3576,21 @@ function bindEvents() {
       closeWorkerProfile();
     }
   });
-
-  document.addEventListener("click", (event) => {
-    const target = event.target instanceof Element ? event.target.closest("#plan-btn") : null;
-    if (!target) {
-      return;
-    }
-
-    event.preventDefault();
-    void showPlan();
-  });
 }
 
-bindLocationGroup("birth");
-bindLocationGroup("current");
 setupLocationDropdowns();
 attachChoiceHandlers();
 bindEvents();
 
 async function initializeApp() {
+  await loadStoredClientAccounts();
+  generateDemoIdentity();
   resetCodeEntry();
-  setCreateAccountMode("phone");
   setAuthView("user");
   setAdminRole("caseworker");
   setLoginView("phone");
   applyLanguage();
-  const restored = await restoreClientSession();
-  if (!restored) {
-    routeClientEntry();
-  }
+  openScreen("login-screen");
 }
 
 initializeApp();
